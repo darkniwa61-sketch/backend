@@ -1,0 +1,26 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Tenant {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique // e.g., "st-joseph" or "starblue"
+  primaryColor  String   @default("#000000")
+  secondaryColor String  @default("#ffffff")
+  logoUrl       String?
+  pages         Page[]
+  createdAt     DateTime @default(now())
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  title     String
+  content   Json     // Stores all your promotional sections
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+}
