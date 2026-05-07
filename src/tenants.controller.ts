@@ -1,4 +1,11 @@
-import { Controller, Get, Put, Body, Param, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Put,
+  Body,
+  Param,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 
 @Controller('api/tenants')
@@ -18,8 +25,8 @@ export class TenantsController {
         logoUrl: true,
       },
       orderBy: {
-        createdAt: 'asc'
-      }
+        createdAt: 'asc',
+      },
     });
   }
 
@@ -44,10 +51,18 @@ export class TenantsController {
   @Put(':slug')
   async updateTenant(
     @Param('slug') slug: string,
-    @Body() updateData: { name?: string; slug?: string; primaryColor?: string; secondaryColor?: string; logoUrl?: string | null }
+    @Body()
+    updateData: {
+      name?: string;
+      slug?: string;
+      primaryColor?: string;
+      secondaryColor?: string;
+      logoUrl?: string | null;
+    },
   ) {
     const tenant = await this.prisma.tenant.findUnique({ where: { slug } });
-    if (!tenant) throw new NotFoundException(`Tenant with slug ${slug} not found`);
+    if (!tenant)
+      throw new NotFoundException(`Tenant with slug ${slug} not found`);
 
     return this.prisma.tenant.update({
       where: { slug },
@@ -58,13 +73,14 @@ export class TenantsController {
   @Put(':slug/page')
   async updateTenantPage(
     @Param('slug') slug: string,
-    @Body() updateData: { title?: string; content?: any }
+    @Body() updateData: { title?: string; content?: any },
   ) {
     const tenant = await this.prisma.tenant.findUnique({
       where: { slug },
       include: { pages: { take: 1 } },
     });
-    if (!tenant) throw new NotFoundException(`Tenant with slug ${slug} not found`);
+    if (!tenant)
+      throw new NotFoundException(`Tenant with slug ${slug} not found`);
 
     const page = tenant.pages[0];
     if (!page) throw new NotFoundException(`No page found for tenant ${slug}`);
