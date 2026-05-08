@@ -23,6 +23,9 @@ export class TenantsController {
         primaryColor: true,
         secondaryColor: true,
         logoUrl: true,
+        contactPhone: true,
+        contactEmail: true,
+        socialLinks: true,
       },
       orderBy: {
         createdAt: 'asc',
@@ -58,6 +61,9 @@ export class TenantsController {
       primaryColor?: string;
       secondaryColor?: string;
       logoUrl?: string | null;
+      contactPhone?: string | null;
+      contactEmail?: string | null;
+      socialLinks?: any;
     },
   ) {
     const tenant = await this.prisma.tenant.findUnique({ where: { slug } });

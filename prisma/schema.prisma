@@ -14,6 +14,9 @@ model Tenant {
   primaryColor  String   @default("#000000")
   secondaryColor String  @default("#ffffff")
   logoUrl       String?
+  contactPhone  String?
+  contactEmail  String?
+  socialLinks   Json?
   pages         Page[]
   createdAt     DateTime @default(now())
 }
