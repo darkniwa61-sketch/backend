@@ -14,9 +14,23 @@ async function bootstrap() {
     crossOriginResourcePolicy: { policy: "cross-origin" }, // Allow images from other sources
   }));
   
-  // Refined CORS
+  // Refined CORS for Multi-Tenancy
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://st-joseph.localhost:3000', 'http://starblue.localhost:3000'],
+    origin: (origin, callback) => {
+      // Allow localhost in development
+      if (!origin || origin.includes('localhost:3000')) {
+        callback(null, true);
+        return;
+      }
+      // Allow any subdomain of the root domain if defined
+      const rootDomain = process.env.ROOT_DOMAIN;
+      if (rootDomain && origin.endsWith(rootDomain)) {
+        callback(null, true);
+        return;
+      }
+      // Fallback
+      callback(null, false);
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
