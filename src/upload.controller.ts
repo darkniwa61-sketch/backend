@@ -20,7 +20,13 @@ export class UploadController {
         const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
         return cb(null, `${randomName}${extname(file.originalname)}`);
       }
-    })
+    }),
+    fileFilter: (req, file, cb) => {
+      if (!file.originalname.match(/\.(jpg|jpeg|png|gif|webp)$/)) {
+        return cb(new HttpException('Only image files (jpg, png, webp) are allowed!', HttpStatus.BAD_REQUEST), false);
+      }
+      cb(null, true);
+    }
   }))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     if (!file) {

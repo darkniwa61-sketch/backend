@@ -4,9 +4,14 @@ import {
   Put,
   Body,
   Param,
+  Post,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
+import * as bcrypt from 'bcrypt';
+import { CreateLeadDto } from './dto/create-lead.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('api/tenants')
 export class TenantsController {
@@ -94,6 +99,76 @@ export class TenantsController {
     return this.prisma.page.update({
       where: { id: page.id },
       data: updateData,
+    });
+  }
+  
+  @Post(':slug/leads')
+  async createLead(
+    @Param('slug') slug: string,
+    @Body() leadData: CreateLeadDto,
+  ) {
+    const tenant = await this.prisma.tenant.findUnique({ where: { slug } });
+    if (!tenant) throw new NotFoundException(`Tenant with slug ${slug} not found`);
+
+    return this.prisma.lead.create({
+      data: {
+        ...leadData,
+        tenantId: tenant.id,
+      },
+    });
+  }
+
+  @Get(':slug/leads')
+  async getLeads(@Param('slug') slug: string) {
+    const tenant = await this.prisma.tenant.findUnique({ where: { slug } });
+    if (!tenant) throw new NotFoundException(`Tenant with slug ${slug} not found`);
+
+    return this.prisma.lead.findMany({
+      where: { tenantId: tenant.id },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  @Post(':slug/auth/login')
+  async login(
+    @Param('slug') slug: string,
+    @Body() body: LoginDto
+  ) {
+    const { email, passwordHash } = body;
+    
+    const tenant = await this.prisma.tenant.findUnique({ where: { slug } });
+    if (!tenant) throw new UnauthorizedException('Invalid tenant');
+
+    const admin = await this.prisma.admin.findUnique({ 
+      where: { email },
+    });
+
+    if (!admin || admin.tenantId !== tenant.id) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const isPasswordValid = await bcrypt.compare(passwordHash, admin.passwordHash);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return { 
+      success: true, 
+      token: 'mock-jwt-token-' + admin.id,
+      admin: { email: admin.email }
+    };
+  }
+
+  @Post(':slug/leads/:id/delete')
+  async deleteLead(
+    @Param('slug') slug: string,
+    @Param('id') id: string
+  ) {
+    const tenant = await this.prisma.tenant.findUnique({ where: { slug } });
+    if (!tenant) throw new NotFoundException('Tenant not found');
+
+    return this.prisma.lead.delete({
+      where: { id, tenantId: tenant.id }
     });
   }
 }

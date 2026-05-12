@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 // We removed the Pool and Adapter imports because SQLite doesn't need them!
 const prisma = new PrismaClient();
@@ -6,8 +7,12 @@ const prisma = new PrismaClient();
 async function main() {
   // 1. Clear existing data to avoid conflicts
   console.log('Cleaning existing data...');
+  await prisma.lead.deleteMany({});
+  await prisma.admin.deleteMany({});
   await prisma.page.deleteMany({});
   await prisma.tenant.deleteMany({});
+
+  const passwordHash = await bcrypt.hash('admin123', 10);
 
   // 2. Seed St. Joseph Amity (Luxury Condominium)
   console.log('Seeding St. Joseph Amity...');
@@ -49,6 +54,14 @@ async function main() {
     },
   });
 
+  await prisma.admin.create({
+    data: {
+      email: 'admin@st-joseph.com',
+      passwordHash,
+      tenantId: stJoseph.id,
+    }
+  });
+
   // 3. Seed Starblue Aggregates (Industrial Quarry)
   console.log('Seeding Starblue Aggregates...');
   const starblue = await prisma.tenant.create({
@@ -87,6 +100,14 @@ async function main() {
         },
       },
     },
+  });
+
+  await prisma.admin.create({
+    data: {
+      email: 'admin@starblue.com',
+      passwordHash,
+      tenantId: starblue.id,
+    }
   });
 
   console.log('Seeding finished successfully.');

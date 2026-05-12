@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -18,7 +18,22 @@ model Tenant {
   contactEmail  String?
   socialLinks   Json?
   pages         Page[]
+  leads         Lead[]
+  admins        Admin[]
   createdAt     DateTime @default(now())
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  interest  String
+  message   String
+  date      String?
+  time      String?
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  createdAt DateTime @default(now())
 }
 
 model Page {
@@ -27,4 +42,13 @@ model Page {
   content   Json     // Stores all your promotional sections
   tenant    Tenant   @relation(fields: [tenantId], references: [id])
   tenantId  String
+}
+
+model Admin {
+  id           String @id @default(cuid())
+  email        String @unique
+  passwordHash String
+  tenant       Tenant @relation(fields: [tenantId], references: [id])
+  tenantId     String
+  createdAt    DateTime @default(now())
 }
