@@ -17,7 +17,7 @@ import { LoginDto } from './dto/login.dto';
 export class TenantsController {
   constructor(private readonly prisma: PrismaService) {}
 
-  @Get()
+  @Get('')
   async getTenants() {
     // Only return safe public data needed for the directory
     return this.prisma.tenant.findMany({
