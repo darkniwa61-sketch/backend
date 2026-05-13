@@ -1,5 +1,5 @@
 # compiled output
-/dist
+# /dist - committed so Render uses the correct pre-built output
 /node_modules
 /build
 
