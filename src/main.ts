@@ -17,18 +17,30 @@ async function bootstrap() {
   // Refined CORS for Multi-Tenancy
   app.enableCors({
     origin: (origin, callback) => {
-      // Allow localhost in development
-      if (!origin || origin.includes('localhost:3000')) {
+      // Allow requests with no origin (e.g. server-to-server, curl)
+      if (!origin) {
         callback(null, true);
         return;
       }
-      // Allow any subdomain of the root domain if defined
+      // Allow localhost in development
+      if (origin.includes('localhost')) {
+        callback(null, true);
+        return;
+      }
+      // Allow the explicit frontend URL (e.g. your Vercel deployment URL)
+      const frontendUrl = process.env.FRONTEND_URL;
+      if (frontendUrl && origin === frontendUrl) {
+        callback(null, true);
+        return;
+      }
+      // Allow any origin ending with ROOT_DOMAIN (e.g. ".vercel.app" for all Vercel previews)
       const rootDomain = process.env.ROOT_DOMAIN;
       if (rootDomain && origin.endsWith(rootDomain)) {
         callback(null, true);
         return;
       }
-      // Fallback
+      // Reject unknown origins but log them for easier debugging
+      console.warn(`[CORS] Blocked origin: ${origin}`);
       callback(null, false);
     },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
