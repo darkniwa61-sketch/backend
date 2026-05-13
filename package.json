@@ -27,7 +27,7 @@
     "@nestjs/throttler": "^6.5.0",
     "@prisma/adapter-libsql": "^7.7.0",
     "@prisma/client": "^6.2.1",
-    "@supabase/supabase-js": "^2.105.3",
+    "@supabase/supabase-js": "^2.105.4",
     "@types/multer": "^2.1.0",
     "@types/pg": "^8.20.0",
     "bcrypt": "^6.0.0",
