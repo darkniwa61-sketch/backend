@@ -40,7 +40,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)({ message: 'Message is required' }),
-    (0, class_validator_1.MinLength)(10, { message: 'Message should be at least 10 characters' }),
+    (0, class_validator_1.MinLength)(2, { message: 'Message should be at least 2 characters' }),
     (0, class_validator_1.MaxLength)(1000, { message: 'Message is too long' }),
     __metadata("design:type", String)
 ], CreateLeadDto.prototype, "message", void 0);

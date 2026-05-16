@@ -17,7 +17,7 @@ export class CreateLeadDto {
 
   @IsString()
   @IsNotEmpty({ message: 'Message is required' })
-  @MinLength(10, { message: 'Message should be at least 10 characters' })
+  @MinLength(2, { message: 'Message should be at least 2 characters' })
   @MaxLength(1000, { message: 'Message is too long' })
   message: string;
 
