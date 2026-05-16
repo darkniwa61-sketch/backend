@@ -6,8 +6,8 @@ export declare class TenantsController {
     constructor(prisma: PrismaService);
     getTenants(): Promise<{
         id: string;
-        name: string;
         slug: string;
+        name: string;
         primaryColor: string;
         secondaryColor: string;
         logoUrl: string | null;
@@ -24,8 +24,8 @@ export declare class TenantsController {
         }[];
     } & {
         id: string;
-        name: string;
         slug: string;
+        name: string;
         primaryColor: string;
         secondaryColor: string;
         logoUrl: string | null;
@@ -45,8 +45,8 @@ export declare class TenantsController {
         socialLinks?: any;
     }): Promise<{
         id: string;
-        name: string;
         slug: string;
+        name: string;
         primaryColor: string;
         secondaryColor: string;
         logoUrl: string | null;
@@ -68,10 +68,10 @@ export declare class TenantsController {
         id: string;
         name: string;
         createdAt: Date;
-        tenantId: string;
         email: string;
-        interest: string;
+        tenantId: string;
         message: string;
+        interest: string;
         date: string | null;
         time: string | null;
     }>;
@@ -79,10 +79,10 @@ export declare class TenantsController {
         id: string;
         name: string;
         createdAt: Date;
-        tenantId: string;
         email: string;
-        interest: string;
+        tenantId: string;
         message: string;
+        interest: string;
         date: string | null;
         time: string | null;
     }[]>;
@@ -97,10 +97,10 @@ export declare class TenantsController {
         id: string;
         name: string;
         createdAt: Date;
-        tenantId: string;
         email: string;
-        interest: string;
+        tenantId: string;
         message: string;
+        interest: string;
         date: string | null;
         time: string | null;
     }>;
