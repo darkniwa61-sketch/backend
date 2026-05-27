@@ -46,7 +46,6 @@ export class CreateLeadDto {
 
   @IsEmail({}, { message: 'Please provide a valid email address' })
   @IsNotEmpty({ message: 'Email is required' })
-  @IsValidEmailDomain({ message: 'Email domain does not exist or cannot receive emails' })
   email: string;
 
   @IsString()

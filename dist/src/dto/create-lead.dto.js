@@ -102,7 +102,6 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsEmail)({}, { message: 'Please provide a valid email address' }),
     (0, class_validator_1.IsNotEmpty)({ message: 'Email is required' }),
-    IsValidEmailDomain({ message: 'Email domain does not exist or cannot receive emails' }),
     __metadata("design:type", String)
 ], CreateLeadDto.prototype, "email", void 0);
 __decorate([
